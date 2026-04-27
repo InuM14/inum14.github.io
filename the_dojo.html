@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fighting Games Hub — The Dojo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="nav-label">Navigation</span>
+      <ul class="nav-menu" id="navMenu">
+        <li><span class="menu-divider">// MAIN</span></li>
+        <li><a href="index.html">Home</a></li>
+        <li><span class="menu-divider">// PAGES</span></li>
+        <li><a href="the_dojo.html">The Dojo</a></li>
+        <li><a href="the_market.html">The Market</a></li>
+        <li><a href="world_tour.html">World Tour</a></li>
+        <li><a href="masters_room.html">The Master's Room</a></li>
+        <li><span class="menu-divider">// SUB-PAGES</span></li>
+        <li><a href="universal_concepts.html">Universal Concepts</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="external_resources.html">External Resources</a></li>
+        <li><a href="personal_projects.html">Personal Projects</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <header>
+      <span class="eyebrow eyebrow-pink">// Enter Training Mode //</span>
+      <h1 class="site-title title-cyan">The Dojo</h1>
+      <p class="subtitle">Terminology · Techniques · Mastery</p>
+      <div class="header-divider"></div>
+    </header>
+
+    <main>
+      <a class="back-link" href="index.html">◀ Back to Home</a>
+
+      <div class="dojo-grid">
+
+        <!-- ── Game Types ── -->
+        <div class="term-column panel">
+          <div class="col-header">
+            <div class="col-title">Game Types</div>
+            <div class="custom-select-wrapper">
+              <button class="custom-select-btn" data-col="gametypes" aria-haspopup="listbox">
+                <span class="btn-label">Select a term...</span>
+                <span class="select-arrow">▼</span>
+              </button>
+              <div class="custom-options" role="listbox">
+                <div class="custom-option" data-value="2d">2D Game</div>
+                <div class="custom-option" data-value="3d">3D Game</div>
+                <div class="custom-option" data-value="platform">Platform Fighter</div>
+              </div>
+            </div>
+          </div>
+          <div class="def-display" id="def-gametypes">
+            <div class="def-placeholder">
+              <span class="def-placeholder-icon">🎮</span>
+              <span class="def-placeholder-text">Select a term above</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Core Principles ── -->
+        <div class="term-column panel">
+          <div class="col-header">
+            <div class="col-title">Core Principles</div>
+            <div class="custom-select-wrapper">
+              <button class="custom-select-btn" data-col="principles" aria-haspopup="listbox">
+                <span class="btn-label">Select a term...</span>
+                <span class="select-arrow">▼</span>
+              </button>
+              <div class="custom-options" role="listbox">
+                <div class="custom-option" data-value="advantage">Advantage</div>
+                <div class="custom-option" data-value="plus">Plus</div>
+                <div class="custom-option" data-value="minus">Minus</div>
+                <div class="custom-option" data-value="block">Block</div>
+                <div class="custom-option" data-value="cancel">Cancel</div>
+              </div>
+            </div>
+          </div>
+          <div class="def-display" id="def-principles">
+            <div class="def-placeholder">
+              <span class="def-placeholder-icon">⚖️</span>
+              <span class="def-placeholder-text">Select a term above</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Techniques / Lingo ── -->
+        <div class="term-column panel">
+          <div class="col-header">
+            <div class="col-title">Techniques / Lingo</div>
+            <div class="custom-select-wrapper">
+              <button class="custom-select-btn" data-col="techniques" aria-haspopup="listbox">
+                <span class="btn-label">Select a term...</span>
+                <span class="select-arrow">▼</span>
+              </button>
+              <div class="custom-options" role="listbox">
+                <div class="custom-option" data-value="bnb">Bread and Butter</div>
+                <div class="custom-option" data-value="dp">Dragon Punch</div>
+                <div class="custom-option" data-value="divekick">Divekick</div>
+                <div class="custom-option" data-value="rekka">Rekka</div>
+              </div>
+            </div>
+          </div>
+          <div class="def-display" id="def-techniques">
+            <div class="def-placeholder">
+              <span class="def-placeholder-icon">🥋</span>
+              <span class="def-placeholder-text">Select a term above</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <footer>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="the_dojo.html">The Dojo</a>
+        <a href="the_market.html">The Market</a>
+        <a href="world_tour.html">World Tour</a>
+        <a href="masters_room.html">Master's Room</a>
+      </nav>
+      <p class="footer-credit">&copy; 2026 <span>McIntire</span> — All rights reserved</p>
+    </footer>
+
+  </div>
+
+  <script src="nav.js" defer></script>
+  <script src="dojo.js" defer></script>
+
+</body>
+</html>
