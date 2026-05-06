@@ -747,11 +747,21 @@ footer::before {
   z-index: 50;
 }
 
-/* The dropdown panels can't use clip-path, or their open
-   options list gets visually cut off below the panel edge. */
+/* Standalone panel styling without clip-path, since clip-path
+   would cut off the dropdown options that extend below. */
 .market-control {
+  position: relative;
   padding: 18px 20px;
-  clip-path: none;
+  background: rgba(15, 0, 32, 0.75);
+  border: 1px solid rgba(191, 0, 255, 0.4);
+}
+
+.market-control::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
 }
 
 .market-control .col-title {
@@ -1013,11 +1023,21 @@ footer::before {
   z-index: 50;
 }
 
-/* The control panel can't use clip-path, or the open dropdown
-   options get visually cut off below the panel edge. */
+/* Standalone panel styling without clip-path, since clip-path
+   would cut off the dropdown options that extend below. */
 .worldtour-control {
+  position: relative;
   padding: 18px 20px;
-  clip-path: none;
+  background: rgba(15, 0, 32, 0.75);
+  border: 1px solid rgba(191, 0, 255, 0.4);
+}
+
+.worldtour-control::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan));
 }
 
 .worldtour-control .col-title {
