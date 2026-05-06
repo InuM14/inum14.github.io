@@ -157,31 +157,69 @@ document.addEventListener('click', () => {
 
 
 /* ------------------------------------------------------------
-   CHEAPSHARK API — live PC price lookup
+   STORE NAME LOOKUP
+   - Maps CheapShark storeID values to display names.
+   - Only the most common stores are included; unknown IDs
+     fall back to "another store".
    ------------------------------------------------------------ */
-async function fetchLivePCPrice(title) {
+const STORE_NAMES = {
+  "1":  "Steam",
+  "2":  "GamersGate",
+  "3":  "GreenManGaming",
+  "7":  "GOG",
+  "8":  "Origin",
+  "11": "Humble Store",
+  "13": "Uplay",
+  "15": "Fanatical",
+  "21": "WinGameStore",
+  "23": "GameBillet",
+  "24": "Voidu",
+  "25": "Epic Games Store",
+  "27": "Gamesplanet",
+  "28": "Gamesload",
+  "29": "2Game",
+  "30": "IndieGala",
+  "31": "Blizzard Shop"
+};
+
+
+/* ------------------------------------------------------------
+   CHEAPSHARK API — pulls Steam price + cheapest elsewhere
+   ------------------------------------------------------------ */
+async function fetchLivePCPrices(title) {
   try {
-    const url  = `https://www.cheapshark.com/api/1.0/deals?title=${encodeURIComponent(title)}&pageSize=30`;
+    const url  = `https://www.cheapshark.com/api/1.0/deals?title=${encodeURIComponent(title)}&pageSize=60`;
     const res  = await fetch(url);
     if (!res.ok) return null;
     const data = await res.json();
     if (!Array.isArray(data) || data.length === 0) return null;
 
-    // Filter to deals that look like the BASE edition
-    // (exclude Deluxe / Ultimate / Year 1 / Complete / Bundle variants)
+    // Filter out Deluxe / Ultimate / Year 1 / etc. variants
     const baseDeals = data.filter(d =>
       !/(deluxe|ultimate|year\s*1|complete|bundle|edition\s*pack|season\s*pass)/i.test(d.title)
     );
-
     const pool = baseDeals.length ? baseDeals : data;
 
-    // Lowest current price wins
-    pool.sort((a, b) => parseFloat(a.salePrice) - parseFloat(b.salePrice));
-    const best = pool[0];
+    // Steam = storeID "1"
+    const steamDeal = pool.find(d => d.storeID === "1");
+
+    // Cheapest deal that is NOT Steam
+    const elsewhereDeals = pool
+      .filter(d => d.storeID !== "1")
+      .sort((a, b) => parseFloat(a.salePrice) - parseFloat(b.salePrice));
+    const cheapestElsewhere = elsewhereDeals[0] || null;
 
     return {
-      sale:   parseFloat(best.salePrice),
-      normal: parseFloat(best.normalPrice)
+      steam: steamDeal ? {
+        sale:   parseFloat(steamDeal.salePrice),
+        normal: parseFloat(steamDeal.normalPrice)
+      } : null,
+      elsewhere: cheapestElsewhere ? {
+        sale:    parseFloat(cheapestElsewhere.salePrice),
+        normal:  parseFloat(cheapestElsewhere.normalPrice),
+        storeID: cheapestElsewhere.storeID,
+        dealID:  cheapestElsewhere.dealID
+      } : null
     };
   } catch (err) {
     console.error('CheapShark fetch failed:', err);
@@ -219,36 +257,43 @@ function renderUnavailable(gameName, platformName) {
   `;
 }
 
-function priceCardHTML({ tierLabel, msrp, livePrice, storeUrl, storeName, note }) {
-  // If we have a live price lower than MSRP, show both (live = bold, MSRP = strikethrough)
-  // Otherwise just show the MSRP
-  const hasLiveDeal = livePrice && livePrice < msrp;
+function priceCardHTML({ tierLabel, msrp, steamPrice, elsewhere, storeUrl, storeName, note }) {
+  // Main price: Steam sale if available, otherwise MSRP
+  const mainPrice    = steamPrice ? steamPrice.sale : msrp;
+  const showCompare  = steamPrice && steamPrice.sale < msrp;
 
-  const priceBlock = hasLiveDeal
+  const badge = steamPrice
+    ? '<span class="price-source-badge badge-live">Live · Steam</span>'
+    : `<span class="price-source-badge badge-msrp">Standard MSRP</span>`;
+
+  const priceBlock = `
+    <div class="price-display">
+      <div class="price-amount">$${mainPrice.toFixed(2)}</div>
+      ${showCompare ? `<div class="price-amount compare">$${msrp.toFixed(2)}</div>` : ''}
+    </div>
+    ${badge}
+  `;
+
+  // Cheaper elsewhere line — only if it beats the main price
+  const elsewhereBlock = (elsewhere && elsewhere.sale < mainPrice)
     ? `
-      <div class="price-display">
-        <div class="price-amount">$${livePrice.toFixed(2)}</div>
-        <div class="price-amount compare">$${msrp.toFixed(2)}</div>
-      </div>
-      <span class="price-source-badge badge-live">Live · CheapShark</span>
+      <a class="price-elsewhere"
+         href="https://www.cheapshark.com/redirect?dealID=${elsewhere.dealID}"
+         target="_blank" rel="noopener">
+        Cheaper on ${STORE_NAMES[elsewhere.storeID] || 'another store'}:
+        <strong>$${elsewhere.sale.toFixed(2)}</strong>
+        <span class="arrow">▶</span>
+      </a>
     `
-    : `
-      <div class="price-display">
-        <div class="price-amount">$${msrp.toFixed(2)}</div>
-      </div>
-      <span class="price-source-badge ${livePrice ? 'badge-live' : 'badge-msrp'}">
-        ${livePrice ? 'Live · CheapShark' : 'Standard MSRP'}
-      </span>
-    `;
-
-  const noteBlock = note
-    ? `<p class="price-note">${note}</p>`
     : '';
+
+  const noteBlock = note ? `<p class="price-note">${note}</p>` : '';
 
   return `
     <div class="price-card panel">
       <div class="price-tier-label">${tierLabel}</div>
       ${priceBlock}
+      ${elsewhereBlock}
       ${noteBlock}
       <a class="price-store-btn" href="${storeUrl}" target="_blank" rel="noopener">
         View on ${storeName}
@@ -283,47 +328,57 @@ async function renderMarket() {
   // Build initial cards from MSRP data
   setStatus(`Showing prices for ${gameData.name} on ${platMeta.name}.`);
 
-  let livePrice = null;
+  let pcData = null;
 
   // For PC, attempt live price lookup
   if (platform === 'pc') {
     setStatus(`Fetching live prices for ${gameData.name}...`, 'loading');
-    livePrice = await fetchLivePCPrice(gameData.cheapsharkTitle);
+    pcData = await fetchLivePCPrices(gameData.cheapsharkTitle);
 
     // Make sure user hasn't switched selection while we waited
     if (state.game !== game || state.platform !== platform) return;
 
-    if (livePrice) {
+    if (pcData && pcData.steam) {
+      let msg = `Live Steam price: $${pcData.steam.sale.toFixed(2)} (MSRP $${pcData.steam.normal.toFixed(2)})`;
+      if (pcData.elsewhere && pcData.elsewhere.sale < pcData.steam.sale) {
+        const storeName = STORE_NAMES[pcData.elsewhere.storeID] || 'another store';
+        msg += ` · Cheaper at ${storeName}: $${pcData.elsewhere.sale.toFixed(2)}`;
+      }
+      setStatus(msg);
+    } else if (pcData && pcData.elsewhere) {
+      const storeName = STORE_NAMES[pcData.elsewhere.storeID] || 'another store';
       setStatus(
-        `Live PC price: $${livePrice.sale.toFixed(2)} ` +
-        `(MSRP $${livePrice.normal.toFixed(2)}) · via CheapShark`
+        `Steam pricing unavailable — found a deal at ${storeName}: $${pcData.elsewhere.sale.toFixed(2)}.`
       );
     } else {
-      setStatus(`Live PC price unavailable — showing MSRP. Click the button to check Steam directly.`, 'error');
+      setStatus(`Live PC pricing unavailable — showing MSRP. Click the button to check Steam directly.`, 'error');
     }
   }
 
-  const baseLive = (platform === 'pc' && livePrice) ? livePrice.sale : null;
+  const baseSteam     = (platform === 'pc' && pcData) ? pcData.steam     : null;
+  const baseElsewhere = (platform === 'pc' && pcData) ? pcData.elsewhere : null;
 
   // Platform-specific note overrides game-level note when present
   const noteText = platData.note || gameData.note;
 
   gridEl.innerHTML = `
     ${priceCardHTML({
-      tierLabel: 'Base Game',
-      msrp:      platData.base,
-      livePrice: baseLive,
-      storeUrl:  gameData.storeUrls[platform],
-      storeName: platMeta.store,
-      note:      noteText
+      tierLabel:  'Base Game',
+      msrp:       platData.base,
+      steamPrice: baseSteam,
+      elsewhere:  baseElsewhere,
+      storeUrl:   gameData.storeUrls[platform],
+      storeName:  platMeta.store,
+      note:       noteText
     })}
     ${priceCardHTML({
-      tierLabel: 'Base Game + DLC',
-      msrp:      platData.dlc,
-      livePrice: null,                          // DLC tier always uses MSRP — too many SKU variants to match reliably
-      storeUrl:  gameData.storeUrls[platform],
-      storeName: platMeta.store,
-      note:      noteText
+      tierLabel:  'Base Game + DLC',
+      msrp:       platData.dlc,
+      steamPrice: null,                          // DLC tier always uses MSRP — too many SKU variants to match reliably
+      elsewhere:  null,
+      storeUrl:   gameData.storeUrls[platform],
+      storeName:  platMeta.store,
+      note:       noteText
     })}
   `;
 }
