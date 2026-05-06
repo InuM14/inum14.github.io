@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fighting Games Hub — The Master's Room</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="nav-label">Navigation</span>
+      <ul class="nav-menu" id="navMenu">
+        <li><span class="menu-divider">// MAIN</span></li>
+        <li><a href="index.html">Home</a></li>
+        <li><span class="menu-divider">// PAGES</span></li>
+        <li><a href="the_dojo.html">The Dojo</a></li>
+        <li><a href="the_market.html">The Market</a></li>
+        <li><a href="world_tour.html">World Tour</a></li>
+        <li><a href="masters_room.html">The Master's Room</a></li>
+        <li><span class="menu-divider">// SUB-PAGES</span></li>
+        <li><a href="universal_concepts.html">Universal Concepts</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="external_resources.html">External Resources</a></li>
+        <li><a href="personal_projects.html">Personal Projects</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <header>
+      <span class="eyebrow eyebrow-pink">// Player Profile //</span>
+      <h1 class="site-title title-cyan">The Master's<br>Room</h1>
+      <p class="subtitle">Connect · Explore the Workshop</p>
+      <div class="header-divider"></div>
+    </header>
+
+    <main>
+      <a class="back-link" href="index.html">◀ Back to Home</a>
+
+      <!-- ── Two-column dropdown layout (reuses .market-controls) ── -->
+      <div class="market-controls">
+
+        <!-- ── Social Media ── -->
+        <div class="panel market-control">
+          <div class="col-title">Social Media</div>
+          <div class="custom-select-wrapper">
+            <button class="custom-select-btn" data-control="social" aria-haspopup="listbox">
+              <span class="btn-label">Choose a platform...</span>
+              <span class="select-arrow">▼</span>
+            </button>
+            <div class="custom-options" role="listbox">
+              <div class="custom-option" data-value="twitch">InuM14 — Twitch</div>
+              <div class="custom-option" data-value="youtube">InuM14 — YouTube</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Projects ── -->
+        <div class="panel market-control">
+          <div class="col-title">Projects</div>
+          <div class="custom-select-wrapper">
+            <button class="custom-select-btn" data-control="project" aria-haspopup="listbox">
+              <span class="btn-label">Choose a project...</span>
+              <span class="select-arrow">▼</span>
+            </button>
+            <div class="custom-options" role="listbox">
+              <div class="custom-option" data-value="combo">Universal Combo Builder</div>
+              <div class="custom-option" data-value="steam">Random Steam Game Launcher</div>
+              <div class="custom-option" data-value="qr">QR Code Generator</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Status line ── -->
+      <div class="market-status" id="masterStatus">
+        Select a social platform or project to learn more.
+      </div>
+
+      <!-- ── Detail Card ── -->
+      <div class="resource-list" id="masterDetail">
+        <div class="panel resource-empty">
+          <span class="resource-empty-icon">🥋</span>
+          <span class="resource-empty-text">Awaiting selection</span>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="the_dojo.html">The Dojo</a>
+        <a href="the_market.html">The Market</a>
+        <a href="world_tour.html">World Tour</a>
+        <a href="masters_room.html">Master's Room</a>
+      </nav>
+      <p class="footer-credit">&copy; 2026 <span>McIntire</span> — All rights reserved</p>
+    </footer>
+
+  </div>
+
+  <script src="nav.js" defer></script>
+  <script src="masters.js" defer></script>
+
+</body>
+</html>

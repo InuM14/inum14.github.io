@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fighting Games Hub — World Tour</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="nav-label">Navigation</span>
+      <ul class="nav-menu" id="navMenu">
+        <li><span class="menu-divider">// MAIN</span></li>
+        <li><a href="index.html">Home</a></li>
+        <li><span class="menu-divider">// PAGES</span></li>
+        <li><a href="the_dojo.html">The Dojo</a></li>
+        <li><a href="the_market.html">The Market</a></li>
+        <li><a href="world_tour.html">World Tour</a></li>
+        <li><a href="masters_room.html">The Master's Room</a></li>
+        <li><span class="menu-divider">// SUB-PAGES</span></li>
+        <li><a href="universal_concepts.html">Universal Concepts</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="external_resources.html">External Resources</a></li>
+        <li><a href="personal_projects.html">Personal Projects</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <header>
+      <span class="eyebrow eyebrow-pink">// Travel the FGC //</span>
+      <h1 class="site-title title-cyan">World Tour</h1>
+      <p class="subtitle">Curated External Resources · Deeper Dives</p>
+      <div class="header-divider"></div>
+    </header>
+
+    <main>
+      <a class="back-link" href="index.html">◀ Back to Home</a>
+
+      <!-- ── Game Selector ── -->
+      <div class="worldtour-controls">
+        <div class="panel worldtour-control">
+          <div class="col-title">Select Game</div>
+          <div class="custom-select-wrapper">
+            <button class="custom-select-btn" data-control="game" aria-haspopup="listbox">
+              <span class="btn-label">Choose a game...</span>
+              <span class="select-arrow">▼</span>
+            </button>
+            <div class="custom-options" role="listbox">
+              <div class="custom-option" data-value="sf6">Street Fighter 6</div>
+              <div class="custom-option" data-value="t8">Tekken 8</div>
+              <div class="custom-option" data-value="ggst">Guilty Gear Strive</div>
+              <div class="custom-option" data-value="ffcotw">Fatal Fury: City of the Wolves</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Status line ── -->
+      <div class="worldtour-status" id="worldtourStatus">
+        Select a game to see curated external resources.
+      </div>
+
+      <!-- ── Resource List ── -->
+      <div class="resource-list" id="resourceList">
+        <div class="panel resource-empty">
+          <span class="resource-empty-icon">🌍</span>
+          <span class="resource-empty-text">Awaiting selection</span>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="the_dojo.html">The Dojo</a>
+        <a href="the_market.html">The Market</a>
+        <a href="world_tour.html">World Tour</a>
+        <a href="masters_room.html">Master's Room</a>
+      </nav>
+      <p class="footer-credit">&copy; 2026 <span>McIntire</span> — All rights reserved</p>
+    </footer>
+
+  </div>
+
+  <script src="nav.js" defer></script>
+  <script src="worldtour.js" defer></script>
+
+</body>
+</html>
