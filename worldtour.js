@@ -27,6 +27,13 @@ const RESOURCES = {
       author:      "Infil",
       description: "Over 1,000 carefully defined fighting game terms with video examples and Japanese translations. Filtered to the Street Fighter franchise — every term you'll hear during an SF6 stream, match commentary, or Discord conversation.",
       url:         "https://glossary.infil.net/?g=SF"
+    },
+    {
+      category:    "Community",
+      title:       "Street Fighter Official Discord",
+      author:      "Capcom",
+      description: "The official Street Fighter Discord server. Find matchmaking, character-specific discussion, tournament announcements, and a direct line to the wider SF6 community.",
+      url:         "https://discord.gg/streetfighter"
     }
   ],
 
@@ -37,6 +44,13 @@ const RESOURCES = {
       author:      "Infil",
       description: "Over 1,000 carefully defined fighting game terms with video examples and Japanese translations. Filtered to the Tekken franchise — covers everything from Korean Backdash to Wave Dash, plus all the lingo unique to Tekken 8.",
       url:         "https://glossary.infil.net/?g=TK"
+    },
+    {
+      category:    "Community",
+      title:       "Tekken Official Discord",
+      author:      "Bandai Namco",
+      description: "The official Tekken Discord server. A hub for Tekken 8 players of all levels — matchmaking, character channels, patch discussion, and tournament coverage.",
+      url:         "https://discord.gg/tekkenofficial"
     }
   ],
 
@@ -47,6 +61,13 @@ const RESOURCES = {
       author:      "Infil",
       description: "Over 1,000 carefully defined fighting game terms with video examples and Japanese translations. Filtered to the Guilty Gear franchise — covers Roman Cancels, Gatlings, Faultless Defense, and the rest of Strive's mechanics.",
       url:         "https://glossary.infil.net/?g=GG"
+    },
+    {
+      category:    "Community",
+      title:       "Guilty Gear Strive Community Discord",
+      author:      "Community",
+      description: "The central community Discord for Guilty Gear Strive. Includes character-specific channels, combo labs, resource sharing, and matchmaking for all skill levels.",
+      url:         "https://discord.gg/ggstcommunity"
     }
   ],
 
@@ -57,6 +78,13 @@ const RESOURCES = {
       author:      "Infil",
       description: "Over 1,000 carefully defined fighting game terms with video examples and Japanese translations. Filtered to the Fatal Fury franchise — includes the new terminology added for City of the Wolves, like Brave Counter and the REV system.",
       url:         "https://glossary.infil.net/?g=FF"
+    },
+    {
+      category:    "Community",
+      title:       "Fatal Fury Official Discord",
+      author:      "SNK",
+      description: "The official Fatal Fury Discord server. Stay up to date on City of the Wolves news, connect with the community, and find matches and discussion for all skill levels.",
+      url:         "https://discord.gg/fatalfury"
     }
   ]
 };

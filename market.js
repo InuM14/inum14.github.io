@@ -158,33 +158,21 @@ document.addEventListener('click', () => {
 
 /* ------------------------------------------------------------
    STORE NAME LOOKUP
-   - Maps CheapShark storeID values to display names.
-   - Only the most common stores are included; unknown IDs
-     fall back to "another store".
    ------------------------------------------------------------ */
 const STORE_NAMES = {
   "1":  "Steam",
-  "2":  "GamersGate",
   "3":  "GreenManGaming",
   "7":  "GOG",
-  "8":  "Origin",
   "11": "Humble Store",
-  "13": "Uplay",
   "15": "Fanatical",
-  "21": "WinGameStore",
-  "23": "GameBillet",
-  "24": "Voidu",
   "25": "Epic Games Store",
   "27": "Gamesplanet",
-  "28": "Gamesload",
-  "29": "2Game",
-  "30": "IndieGala",
-  "31": "Blizzard Shop"
+  "30": "IndieGala"
 };
 
 
 /* ------------------------------------------------------------
-   CHEAPSHARK API — pulls Steam price + cheapest elsewhere
+   CHEAPSHARK API — Steam price + cheapest elsewhere
    ------------------------------------------------------------ */
 async function fetchLivePCPrices(title) {
   try {
@@ -216,7 +204,6 @@ async function fetchLivePCPrices(title) {
       } : null,
       elsewhere: cheapestElsewhere ? {
         sale:    parseFloat(cheapestElsewhere.salePrice),
-        normal:  parseFloat(cheapestElsewhere.normalPrice),
         storeID: cheapestElsewhere.storeID,
         dealID:  cheapestElsewhere.dealID
       } : null
@@ -258,13 +245,12 @@ function renderUnavailable(gameName, platformName) {
 }
 
 function priceCardHTML({ tierLabel, msrp, steamPrice, elsewhere, storeUrl, storeName, note }) {
-  // Main price: Steam sale if available, otherwise MSRP
-  const mainPrice    = steamPrice ? steamPrice.sale : msrp;
-  const showCompare  = steamPrice && steamPrice.sale < msrp;
+  const mainPrice   = steamPrice ? steamPrice.sale : msrp;
+  const showCompare = steamPrice && steamPrice.sale < msrp;
 
   const badge = steamPrice
     ? '<span class="price-source-badge badge-live">Live · Steam</span>'
-    : `<span class="price-source-badge badge-msrp">Standard MSRP</span>`;
+    : '<span class="price-source-badge badge-msrp">Standard MSRP</span>';
 
   const priceBlock = `
     <div class="price-display">
@@ -274,7 +260,6 @@ function priceCardHTML({ tierLabel, msrp, steamPrice, elsewhere, storeUrl, store
     ${badge}
   `;
 
-  // Cheaper elsewhere line — only if it beats the main price
   const elsewhereBlock = (elsewhere && elsewhere.sale < mainPrice)
     ? `
       <a class="price-elsewhere"
@@ -325,41 +310,31 @@ async function renderMarket() {
     return;
   }
 
-  // Build initial cards from MSRP data
   setStatus(`Showing prices for ${gameData.name} on ${platMeta.name}.`);
 
   let pcData = null;
 
-  // For PC, attempt live price lookup
   if (platform === 'pc') {
     setStatus(`Fetching live prices for ${gameData.name}...`, 'loading');
     pcData = await fetchLivePCPrices(gameData.cheapsharkTitle);
 
-    // Make sure user hasn't switched selection while we waited
     if (state.game !== game || state.platform !== platform) return;
 
     if (pcData && pcData.steam) {
       let msg = `Live Steam price: $${pcData.steam.sale.toFixed(2)} (MSRP $${pcData.steam.normal.toFixed(2)})`;
       if (pcData.elsewhere && pcData.elsewhere.sale < pcData.steam.sale) {
-        const storeName = STORE_NAMES[pcData.elsewhere.storeID] || 'another store';
-        msg += ` · Cheaper at ${storeName}: $${pcData.elsewhere.sale.toFixed(2)}`;
+        const elseStoreName = STORE_NAMES[pcData.elsewhere.storeID] || 'another store';
+        msg += ` · Cheaper at ${elseStoreName}: $${pcData.elsewhere.sale.toFixed(2)}`;
       }
       setStatus(msg);
-    } else if (pcData && pcData.elsewhere) {
-      const storeName = STORE_NAMES[pcData.elsewhere.storeID] || 'another store';
-      setStatus(
-        `Steam pricing unavailable — found a deal at ${storeName}: $${pcData.elsewhere.sale.toFixed(2)}.`
-      );
     } else {
-      setStatus(`Live PC pricing unavailable — showing MSRP. Click the button to check Steam directly.`, 'error');
+      setStatus(`Steam price unavailable — showing MSRP. Click the button to check Steam directly.`, 'error');
     }
   }
 
   const baseSteam     = (platform === 'pc' && pcData) ? pcData.steam     : null;
   const baseElsewhere = (platform === 'pc' && pcData) ? pcData.elsewhere : null;
-
-  // Platform-specific note overrides game-level note when present
-  const noteText = platData.note || gameData.note;
+  const noteText      = platData.note || gameData.note;
 
   gridEl.innerHTML = `
     ${priceCardHTML({
@@ -374,7 +349,7 @@ async function renderMarket() {
     ${priceCardHTML({
       tierLabel:  'Base Game + DLC',
       msrp:       platData.dlc,
-      steamPrice: null,                          // DLC tier always uses MSRP — too many SKU variants to match reliably
+      steamPrice: null,
       elsewhere:  null,
       storeUrl:   gameData.storeUrls[platform],
       storeName:  platMeta.store,

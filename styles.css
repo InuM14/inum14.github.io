@@ -954,8 +954,6 @@ footer::before {
   font-style: italic;
 }
 
-/* Cheaper-elsewhere line — only shown on PC when a non-Steam
-   store has a better deal than Steam. */
 .price-elsewhere {
   display: inline-flex;
   align-items: center;
